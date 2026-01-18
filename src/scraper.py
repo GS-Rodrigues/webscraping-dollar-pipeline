@@ -11,7 +11,7 @@ cursor = conn.cursor();
 try:
     for j in range(date.today().year-1, date.today().year+1):
         for i in range(1, 13):
-            for k in range(1, monthrange(j, i)[1]()[1]):
+            for k in range(1, monthrange(j, i)[1]):
                 if j == date.today().year and i == date.today().month and k >= date.today().day :
                     continue;
 
