@@ -1,4 +1,3 @@
-import os
 import psycopg2
 
 def insert_row(cursor, data_referencia, value_purchase, value_selling):
