@@ -19,6 +19,8 @@ try:
                 response = requests.get(url, timeout=10);
 
                 data = response.json();
+                if data["value"] == []:
+                    continue;
                 try:
                     purchase_value = data["value"][0]["cotacaoCompra"];
                     selling_value = data["value"][0]["cotacaoVenda"];
