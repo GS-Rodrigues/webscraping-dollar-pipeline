@@ -1,0 +1,40 @@
+name: Run Web Scraper Daily
+
+on:
+  schedule:
+    - cron: "0 22 * * *"   # roda todo dia às 19h no Brasil (UTC-3)
+  workflow_dispatch:       # permite rodar manualmente
+
+jobs:
+  scrape:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.14"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Debug secrets length
+        run:
+        env:
+          DB_HOST: ${{ vars.DB_HOST }}
+          DB_USER: ${{ vars.DB_USER }}
+          DB_PASSWORD: ${{ vars.DB_PASSWORD }}
+          DB_NAME: ${{ vars.DB_NAME }}
+          DB_PORT: ${{ vars.DB_PORT }}
+
+      - name: Run scraper
+        env:
+          DB_HOST: ${{ vars.DB_HOST }}
+          DB_USER: ${{ vars.DB_USER }}
+          DB_PASSWORD: ${{ vars.DB_PASSWORD }}
+          DB_NAME: ${{ vars.DB_NAME }}
+          DB_PORT: ${{ vars.DB_PORT }}
+        run: python src/scraper.py
