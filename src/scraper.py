@@ -9,10 +9,10 @@ conn = get_connection();
 cursor = conn.cursor();
 
 try:
-    for j in range(date.today().year-1, date.today().year+1):
+    for j in range(2000, date.today().year+1):
         for i in range(1, 13):
             for k in range(1, monthrange(j, i)[1]):
-                if j <= date.today().year and i <= date.today().month:
+                if j == date.today().year and i == date.today().month and k >= date.today().day:
                     continue;
 
                 url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao=%27{i}-{k}-{j}%27&$top=100&$format=json";
