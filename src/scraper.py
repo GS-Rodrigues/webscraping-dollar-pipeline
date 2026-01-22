@@ -1,38 +1,38 @@
 import requests
+from datetime import date, timedelta
+from calendar import monthrange
 from Insert import *
-from datetime import date
 from date_treatment import *
 from Db_connection import *
-from calendar import monthrange
 
 conn = get_connection();
 cursor = conn.cursor();
 
 try:
-    for j in range(2000, date.today().year+1):
-        for i in range(1, 13):
-            for k in range(1, monthrange(j, i)[1]):
-                if j == date.today().year and i == date.today().month and k >= date.today().day:
-                    continue;
+    yesterday = (datetime.now() - timedelta(days=1)).date()
+    data_str = yesterday.strftime("%m-%d-%Y")
 
-                url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao=%27{i}-{k}-{j}%27&$top=100&$format=json";
-                response = requests.get(url, timeout=10);
+    url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao=%27{data_str}%27&$top=100&$format=json";
 
-                data = response.json();
-                if data["value"] == []:
-                    continue;
-                try:
-                    purchase_value = data["value"][0]["cotacaoCompra"];
-                    selling_value = data["value"][0]["cotacaoVenda"];
-                    date_time = data["value"][0]["dataHoraCotacao"];
-                    date_time = date_treat(date_time);
-                    insert_row(cursor, date_time, purchase_value, selling_value);
-                except ValueError:
-                    continue
-    conn.commit();
+    response = requests.get(url, timeout=10);
+    response.raise_for_status()
+    data = response.json();
+
+    if not data["value"]:
+        raise RuntimeError(f"PTAX sem dados para {data_str}")
+
+    else:
+        info = data["value"][0]
+        purchase_value = info["cotacaoCompra"];
+        selling_value = info["cotacaoVenda"];
+        date_time = info["dataHoraCotacao"];
+        date_time = date_treat(date_time);
+        insert_row(cursor, date_time, purchase_value, selling_value);
+
+except Exception as e:
+    conn.rollback()
+    print("Erro:", e)
 
 finally:
-        if cursor is not None:
-            cursor.close();
-        if conn is not None:
-            conn.close();
+    cursor.close()
+    conn.close()
