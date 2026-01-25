@@ -9,8 +9,7 @@ conn = get_connection();
 cursor = conn.cursor();
 
 try:
-    yesterday = (datetime.now() - timedelta(days=1)).date()
-    data_str = yesterday.strftime("%m-%d-%Y")
+    data_str = datetime.today().strftime("%m-%d-%Y")
 
     url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao=%27{data_str}%27&$top=100&$format=json";
 
