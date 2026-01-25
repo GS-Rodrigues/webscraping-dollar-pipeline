@@ -27,6 +27,7 @@ try:
         date_time = info["dataHoraCotacao"];
         date_time = date_treat(date_time);
         insert_row(cursor, date_time, purchase_value, selling_value);
+        conn.commit()
 
 except Exception as e:
     conn.rollback()
