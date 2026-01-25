@@ -2,7 +2,7 @@ name: Run Web Scraper Daily
 
 on:
   schedule:
-    - cron: "0 22 * * *"   # roda todo dia às 19h no Brasil (UTC-3)
+    - cron: "0 17 * * *"   # roda todo dia às 19h no Brasil (UTC-3)
   workflow_dispatch:       # permite rodar manualmente
 
 jobs:
