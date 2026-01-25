@@ -9,7 +9,7 @@ conn = get_connection();
 cursor = conn.cursor();
 
 try:
-    data_str = datetime.today().strftime("%m-%d-%Y")
+    data_str = "01-22-2026"
 
     url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao=%27{data_str}%27&$top=100&$format=json";
 
